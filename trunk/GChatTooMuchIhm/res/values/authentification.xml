@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--==================-->
+    <!-- Authentification -->
+    <!--==================-->
+    <skip />
+    <string name="label">Authentification</string>
+    <!-- Label above username EditText -->
+    <string name="login_activity_username_label">Email</string>
+    <!-- Label above password EditText -->
+    <string name="login_activity_password_label">Mot de passe</string>
+    <!-- Button to sign in after entering username and password -->
+    <string name="login_activity_login_button">Login</string>
+
+    <!-- Title string for Login activity-->
+    <string name="ui_activity_title">Connexion</string>
+    <!-- Message shown in progress dialog while app connects to the server -->
+    <string name="ui_activity_authenticating">Authentification\u2026</string>
+    <!-- Message shown in dialog if the username or password is invalid. -->
+    <string name="login_activity_loginfail_text_both">L\'email ou le mot de passe est invalide. Nouvel Essai. </string>
+    <!-- Message shown in dialog if the password is invalid -->
+    <string name="login_activity_loginfail_text_pwonly">You entered the wrong password or your account has changed. Please re-enter your password.</string>
+    <!-- Message shown if the provided account doesn't support the current activity. -->
+    <string name="login_activity_newaccount_text">Authentification au compte Google pour envoi du rapport.</string>
+    <!-- Message shown in dialog to prompt the user for their password -->
+    <string name="login_activity_loginfail_text_pwmissing">Saisie du mot de passe obligatoire.</string>
+</resources>

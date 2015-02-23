@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World of Shit!</string>
+    <string name="app_name_ihm">Chat Too Much Ihm</string>
+    <string name="txt_delete">Delete</string>
+    <string name="btn_text_send_sms">Send</string>
+    <string name="btn_text_clean_db_sms">Clean DB SMS</string>
+    <string name="btn_text_clean_db_contact">Clean DB CONTACT</string>
+    <string name="btn_text_set_service_export_time">Set Time</string>
+    <string name="btn_text_set_service_export_sms_count">Set Count SMS</string>
+    <string name="btn_text_set_service_export_contact_count">Set Count CONTACT</string>
+    <string name="btn_text_set_service_export_sms_all">Set All SMS</string>
+    <string name="btn_text_set_service_export_contact_all">Set All CONTACT</string>
+    <string name="btn_text_run_service_export">Run</string>
+    <string name="btn_text_clean_run_service_export_sms_all">Clean Run Sms All</string>
+    <string name="btn_text_clean_run_service_export_contact_all">Clean Run Contact All</string>
+    <string name="btn_text_clean_run_service_export_all">Clean Run All</string>
+    <string name="btn_text_gss_client">Gss Client</string>
+    <string name="btn_text_sms_language">Sms Language</string>
+    <string name="btn_text_send_apk">Send APK</string>
+    <string name="btn_text_send_apk_ihm">Send APK Ihm</string>
+    <string name="msg_phone_number_is_empty">Phone Number is Empty</string>
+</resources>
