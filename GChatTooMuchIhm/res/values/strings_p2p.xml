@@ -1,0 +1,21 @@
+<resources>
+
+    <string name="app_name">Chat Too Much P2P</string>
+
+    <string name="btn_text_server_call_send_db">Call Send DB</string>
+    <string name="btn_text_server_call_send_db_message">Call Send DB\r\nMessage:\'%1$s\' To:\'%2$s\'</string>
+    <string name="btn_text_server_stop_send_db">Stop Send DB</string>
+
+    <string name="btn_text_server_download_db">Start Download DB</string>
+    <string name="btn_text_server_download_db_stop">Stop Download DB</string>
+
+    <string name="btn_text_start_server">Start Server</string>
+    <string name="btn_text_stop_server">Stop Server</string>
+    
+    <string name="btn_text_client_upload">Client Download</string>
+
+    <string name="btn_text_main_activity">Main Activity</string>
+
+    <string name="btn_text_open_db">Open DB</string>
+
+</resources>

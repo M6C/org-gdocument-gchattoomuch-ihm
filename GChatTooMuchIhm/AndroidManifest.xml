@@ -7,21 +7,32 @@
 	>
     <!-- android:sharedUserId="gchat.too.much" -->
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="11"
         android:targetSdkVersion="21" />
+
+    <!-- Usable for SD Card Writing -->
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- Usable for P2P -->
+   	<uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Usable for IP Address -->
+   	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  	<!-- Usable for Sms -->
+	<uses-permission android:name="android.permission.SEND_SMS"/>
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name_ihm" >
         <!-- android:theme="@style/AppTheme" -->
-        <activity android:name="org.gdocument.gchattoomuch.ihm.activity.AuthentificationActivity">
+        <activity android:name="org.gdocument.gchattoomuch.p2p.activity.P2PActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="org.gdocument.gchattoomuch.ihm.activity.MainActivity"/>
         <activity android:name="org.gdocument.gchattoomuch.ihm.activity.SmsLanguageActivity"/>
+        <activity android:name=".browser.db.activity.BrowserDatabaseActivity"/>
         <activity android:name="com.prasanta.GSSAct" android:label="@string/app_name"/>
 		<activity android:name="com.prasanta.GSSDetails" android:label="@string/app_name"/>
         <activity android:name="com.prasanta.WKDetails" android:label="@string/app_name"/>

@@ -5,6 +5,7 @@
     <string name="app_name_ihm">Chat Too Much Ihm</string>
     <string name="txt_delete">Delete</string>
     <string name="btn_text_send_sms">Send</string>
+    <string name="btn_text_send_db">Call Send DB</string>
     <string name="btn_text_clean_db_sms">Clean DB SMS</string>
     <string name="btn_text_clean_db_contact">Clean DB CONTACT</string>
     <string name="btn_text_set_service_export_time">Set Time</string>
@@ -19,6 +20,8 @@
     <string name="btn_text_gss_client">Gss Client</string>
     <string name="btn_text_sms_language">Sms Language</string>
     <string name="btn_text_send_apk">Send APK</string>
+    <string name="btn_text_send_apk_client">Send APK Client</string>
     <string name="btn_text_send_apk_ihm">Send APK Ihm</string>
     <string name="msg_phone_number_is_empty">Phone Number is Empty</string>
+    <string name="btn_text_order">Order</string>
 </resources>

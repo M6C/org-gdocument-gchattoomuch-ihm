@@ -26,12 +26,19 @@ http://developer.android.com/resources/samples/SampleSyncAdapter/res/layout/logi
 	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
 	            android:hint="Sms Content"
+	            android:inputType="textAutoComplete|textCapSentences"
 	        />
 	        <EditText
 	            android:id="@+id/tvSmsPhone"
 	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
 	            android:hint="Phone"
+	            android:inputType="number"
+	        />
+	        <TextView
+	            android:id="@+id/tvMessage"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
 	        />
 	        <TextView
                 android:id="@+id/message"
@@ -132,6 +139,22 @@ http://developer.android.com/resources/samples/SampleSyncAdapter/res/layout/logi
 		     />
 
 		    <Button
+		        android:id="@+id/btn_send_db"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+		        android:text="@string/btn_text_server_call_send_db"
+	            android:onClick="onClickSendDb"
+		     />
+
+		    <Button
+		        android:id="@+id/btn_start_download"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+		        android:text="@string/btn_text_server_download_db"
+	            android:onClick="onClickDownloadDb"
+		     />
+		    
+		    <Button
 		        android:id="@+id/btn_clean_db_sms"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
@@ -200,6 +223,13 @@ http://developer.android.com/resources/samples/SampleSyncAdapter/res/layout/logi
 	            android:layout_height="wrap_content"
 	            android:text="@string/btn_text_send_apk"
 	            android:id="@+id/btnSendAPK"
+		    />
+
+		    <Button
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:text="@string/btn_text_send_apk_client"
+	            android:id="@+id/btnSendAPKP2PClient"
 		    />
 
 		    <Button

@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!--
-http://developer.android.com/resources/samples/SampleSyncAdapter/res/layout/login_activity.html
--->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
@@ -26,12 +23,20 @@ http://developer.android.com/resources/samples/SampleSyncAdapter/res/layout/logi
 	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
 	            android:hint="Sms Content"
+	            android:inputType="textAutoComplete|textCapSentences"
 	        />
 	        <EditText
 	            android:id="@+id/tvSmsPhone"
 	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
 	            android:hint="Phone"
+	            android:text="0683469658"
+	            android:inputType="number"
+	        />
+	        <TextView
+	            android:id="@+id/tvMessage"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
 	        />
         </LinearLayout>
     </ScrollView>
@@ -47,6 +52,14 @@ http://developer.android.com/resources/samples/SampleSyncAdapter/res/layout/logi
 	        android:paddingLeft="2dip"
 	        android:paddingRight="2dip"
 	        android:orientation="horizontal">
+		    <Button
+		        android:id="@+id/btn_send_db"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+		        android:text="@string/btn_text_send_db"
+	            android:onClick="onClickSendDb"
+		     />
+
 		    <Button
 		        android:id="@+id/btn_clean_db_sms"
 	            android:layout_width="wrap_content"

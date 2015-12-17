@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="title_dialog_order">Order</string>
+    <string name="title_dialog_open_database">Open Database</string>
+    <string name="btn_open_database">Open</string>
+    <string name="tv_name_database">Database Name</string>
+</resources>

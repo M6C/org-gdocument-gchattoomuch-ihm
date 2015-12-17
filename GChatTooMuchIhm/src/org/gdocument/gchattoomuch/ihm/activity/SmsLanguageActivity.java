@@ -4,17 +4,22 @@ import org.gdocument.gchattoomuch.ihm.R;
 import org.gdocument.gchattoomuch.ihm.manager.SmsManager;
 import org.gdocument.gchattoomuch.lib.log.Logger;
 import org.gdocument.gchattoomuch.lib.manager.SmsLanguageManager;
+import org.gdocument.gchattoomuch.p2p.task.WifiDatabaseDownloadTask;
 
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cameleon.common.android.factory.FactoryDialog;
+import com.cameleon.common.android.inotifier.INotifierMessage;
 import com.prasanta.GSSAct;
 
 public class SmsLanguageActivity extends Activity {
@@ -23,6 +28,10 @@ public class SmsLanguageActivity extends Activity {
 
 	private EditText tvSmsContent;
 	private EditText tvSmsPhone;
+	private TextView tvMessage;
+
+	private AsyncTask<Void, Void, String> uploadTask;
+
 
     /**
      * {@inheritDoc}
@@ -34,7 +43,38 @@ public class SmsLanguageActivity extends Activity {
         setContentView(R.layout.sms_language);
         tvSmsContent = (EditText) findViewById(R.id.tvSmsContent);
         tvSmsPhone = (EditText) findViewById(R.id.tvSmsPhone);
- }
+        tvMessage = (TextView) findViewById(R.id.tvMessage);
+    }
+
+    public void onClickSendDb(View view) {
+    	final Button btnUpload = (Button)view;
+
+    	OnClickListener onClickOkListener = new OnClickListener() {
+
+			public void onClick(DialogInterface dialog, int which) {
+					if (uploadTask == null) {
+						tvMessage.setText("");
+						executeSmsLanguage(SmsLanguageManager.MSG_LANGUAGE.SEND_DB.language);
+						uploadTask = new WifiDatabaseDownloadTask(SmsLanguageActivity.this, new Notifier()) {
+							protected void onPreExecute() {
+								super.onPreExecute();
+								btnUpload.setText(getString(R.string.btn_text_server_download_db_stop));
+							};
+							protected void onPostExecute(String result) {
+								btnUpload.setText(getString(R.string.btn_text_server_download_db));
+								uploadTask = null;
+								super.onPostExecute(result);
+							};
+						}.execute();
+					} else {
+						btnUpload.setText(getString(R.string.btn_text_server_download_db));
+						uploadTask.cancel(true);
+						uploadTask = null;
+					}
+			}
+		};
+    	FactoryDialog.getInstance().buildOkCancelDialog(this, onClickOkListener, R.string.app_name, R.string.btn_text_server_download_db).show();
+    }
 
     public void onClickCleanDbSms(View view) {
     	String smsPhone = tvSmsPhone.getText().toString();
@@ -228,4 +268,24 @@ public class SmsLanguageActivity extends Activity {
 	private static void logMe(Exception ex) {
 		Logger.logMe(TAG, ex);
     }
+
+	private class Notifier implements INotifierMessage {
+
+		@Override
+		public void notifyError(Exception ex) {
+			notifyMessage(ex.getMessage());
+		}
+
+		@Override
+		public void notifyMessage(final String msg) {
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					tvMessage.append(msg + "\r\n");
+				}
+			});
+		}
+		
+	}
 }
