@@ -6,15 +6,13 @@ import org.gdocument.gchattoomuch.ihm.activity.MainActivity;
 import org.gdocument.gchattoomuch.ihm.browser.db.activity.BrowserDatabaseActivity;
 import org.gdocument.gchattoomuch.ihm.manager.SmsManager;
 import org.gdocument.gchattoomuch.lib.manager.SmsLanguageManager;
+import org.gdocument.gchattoomuch.p2p.activity.listener.OnClickStartStopServerListener;
 import org.gdocument.gchattoomuch.p2p.common.P2PConstant;
-import org.gdocument.gchattoomuch.p2p.task.WifiDatabaseDownloadTask;
-import org.gdocument.gchattoomuch.p2p.task.WifiDatabaseDownloadTask.IProcessNotification;
 
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,12 +23,14 @@ import com.cameleon.common.android.inotifier.INotifierMessage;
 
 public class P2PActivity extends Activity {
 
-	private AsyncTask<Void, Void, String> uploadTask = null;
 	private EditText tvSmsContent;
 	private EditText tvSmsPhone;
 	private EditText tvTimeOut;
 	private TextView tvMessage;
 	private Notifier notifier;
+
+	private OnClickListener onClickStartStopServerListener = null;
+	private Button btnStartStopServer; 
 
 	protected void onCreate(android.os.Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -42,6 +42,7 @@ public class P2PActivity extends Activity {
         tvSmsPhone = (EditText) findViewById(R.id.tv_SmsPhone);
         tvMessage = (TextView) findViewById(R.id.tv_Message);
         tvTimeOut = (EditText) findViewById(R.id.tv_TimeOut);
+        btnStartStopServer = (Button) findViewById(R.id.btn_start_stop_server);
 
         tvTimeOut.setText(Integer.toString(P2PConstant.P2P_DOWNLOAD_TIMEOUT));
 	};
@@ -49,60 +50,15 @@ public class P2PActivity extends Activity {
 	public void onClickStartStopServer(View view) {
     	final Button btnUpload = (Button)view;
 
-    	OnClickListener onClickOkListener = new OnClickListener() {
+    	int timeOut = P2PConstant.P2P_DOWNLOAD_TIMEOUT;
+    	try {
+    		timeOut = Integer.parseInt(tvTimeOut.getText().toString());
+    	} catch (RuntimeException e) {
+    		e.printStackTrace();
+    	}
 
-			public void onClick(DialogInterface dialog, int which) {
-				if (uploadTask == null) {
-					int timeOut = P2PConstant.P2P_DOWNLOAD_TIMEOUT;
-					try {
-						timeOut = Integer.parseInt(tvTimeOut.getText().toString());
-					} catch (RuntimeException e) {
-						e.printStackTrace();
-					}
-					tvMessage.setText("");
-					uploadTask = createWifiDatabaseDownloadTask(btnUpload, timeOut).execute();
-				} else {
-					btnUpload.setText(getString(R.string.btn_text_start_server));
-					uploadTask.cancel(true);
-					uploadTask = null;
-				}
-			}
-
-			private WifiDatabaseDownloadTask createWifiDatabaseDownloadTask(final Button btnUpload, final int timeOut) {
-				WifiDatabaseDownloadTask ret = new WifiDatabaseDownloadTask(P2PActivity.this, notifier, timeOut) {
-					protected void onPreExecute() {
-						super.onPreExecute();
-						btnUpload.setText(getString(R.string.btn_text_stop_server));
-					};
-					protected void onPostExecute(String result) {
-						super.onPostExecute(result);
-						btnUpload.setText(getString(R.string.btn_text_start_server));
-						if (timeOut == 0) {
-							notifier.notifyMessage("restart server");
-							uploadTask = createWifiDatabaseDownloadTask(btnUpload, timeOut);
-						} else {
-							uploadTask = null;
-						}
-					};
-				};
-				if (timeOut == 0) {
-					ret.setProcessNotification(new IProcessNotification() {
-						@Override
-						public void onStart() {}
-						
-						@Override
-						public void onFinish() {
-							createWifiDatabaseDownloadTask(btnUpload, timeOut).execute();
-						}
-						
-						@Override
-						public void onCreate() {}
-					});
-				}
-				return ret;
-			}
-		};
-    	FactoryDialog.getInstance().buildOkCancelDialog(this, onClickOkListener, R.string.app_name, R.string.btn_text_server_download_db).show();
+    	onClickStartStopServerListener = new OnClickStartStopServerListener(this, notifier, timeOut, tvMessage, btnUpload);
+    	FactoryDialog.getInstance().buildOkCancelDialog(this, onClickStartStopServerListener, R.string.app_name, R.string.btn_text_server_download_db).show();
 	}
 
     public void onClickCallSendDb(View view) {
@@ -112,9 +68,9 @@ public class P2PActivity extends Activity {
     	OnClickListener onClickOkListener = new OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int which) {
-				if (uploadTask == null) {
+//				if (uploadTask == null) {
 					tvMessage.setText("");
-				}
+//				}
 				executeSmsLanguage(message);
 			}
 		};

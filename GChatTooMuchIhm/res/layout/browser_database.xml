@@ -82,6 +82,20 @@
 		        android:text="@string/btn_open_database"
 	            android:onClick="onClickOpenDatabase"
 		     />
+		    <Button
+		        android:id="@+id/btn_extract"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+		        android:text="@string/btn_extract"
+	            android:onClick="onClickExtract"
+		     />
+		    <Button
+		        android:id="@+id/btn_set_filter"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+		        android:text="@string/btn_set_filter"
+	            android:onClick="onClickSetFilter"
+		     />
 		</LinearLayout>
 	</HorizontalScrollView>
 </LinearLayout>

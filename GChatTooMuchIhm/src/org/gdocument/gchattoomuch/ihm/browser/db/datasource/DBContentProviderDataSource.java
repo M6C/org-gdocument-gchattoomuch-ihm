@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.gdocument.gchattoomuch.ihm.browser.db.helper.DBContentProviderHelper;
 import org.gdocument.gchattoomuch.ihm.browser.db.manager.ContentProviderManager;
 import org.gdocument.gchattoomuch.ihm.browser.db.manager.ContentProviderManager.Column;
+import org.gdocument.gchattoomuch.ihm.browser.db.manager.ContentProviderManager.ColumnDate;
 import org.gdocument.gchattoomuch.ihm.browser.db.model.ContentProviderData;
 import org.gdocument.gchattoomuch.ihm.browser.db.model.DatabaseItem;
 
@@ -92,17 +94,19 @@ public class DBContentProviderDataSource extends GenericDBDataSource<ContentProv
 		for(int i=0 ; i < columnList.length ; i++) {
 			String name = columnList[i];
 			String d = DbTool.getInstance().toString(cursor, i);
+			Column nameToColumn = null;
 			if (columnListData == null) {
-				listColumn.add(new Column(name));
-			} else {
-				Column nameToColumn = nameToColumn(name);
-				listColumn.add(nameToColumn);
-				if (d != null) {
-					d = nameToColumn.toString(d);
+				if (name.toLowerCase(Locale.getDefault()).contains("date")) {
+					nameToColumn = new ColumnDate(name);
+				} else {
+					nameToColumn = new Column(name);
 				}
+			} else {
+				nameToColumn = nameToColumn(name);
 			}
+			listColumn.add(nameToColumn);
 			if (d != null) {
-				data.put(name, d);
+				data.put(name, nameToColumn.toString(d));
 			}
 		}
 		ret.setData(data);
@@ -111,12 +115,16 @@ public class DBContentProviderDataSource extends GenericDBDataSource<ContentProv
 	}
 
 	private Column nameToColumn(String name) {
-		for(ContentProviderManager.Column column : columnListData) {
+		Column ret = null;
+		for (ContentProviderManager.Column column : columnListData) {
 			if (column.getName().equalsIgnoreCase(name)) {
-				return column;
+				ret = column;
 			}
 		}
-		return null;
+		if ((ret == null || ret instanceof Column) && name.toLowerCase(Locale.getDefault()).contains("date")) {
+			ret = new ColumnDate(name);
+		}
+		return ret;
 	}
 
 	@Override

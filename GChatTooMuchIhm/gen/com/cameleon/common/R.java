@@ -46,16 +46,16 @@ public final class R {
 	}
 	public static final class id {
 		public static final int alertTitle = 0x7f080002;
-		public static final int datePicker = 0x7f080021;
+		public static final int datePicker = 0x7f080023;
 		public static final int icon = 0x7f080001;
-		public static final int timePicker = 0x7f08002c;
+		public static final int timePicker = 0x7f08002f;
 		public static final int titleDivider = 0x7f080003;
 		public static final int title_template = 0x7f080000;
-		public static final int tvDate = 0x7f08002e;
-		public static final int tvMonth = 0x7f08002d;
-		public static final int tvText = 0x7f080022;
-		public static final int tvTime = 0x7f080030;
-		public static final int tvYear = 0x7f08002f;
+		public static final int tvDate = 0x7f080031;
+		public static final int tvMonth = 0x7f080030;
+		public static final int tvText = 0x7f080024;
+		public static final int tvTime = 0x7f080033;
+		public static final int tvYear = 0x7f080032;
 	}
 	public static final class layout {
 		public static final int alert_dialog_title = 0x7f030000;

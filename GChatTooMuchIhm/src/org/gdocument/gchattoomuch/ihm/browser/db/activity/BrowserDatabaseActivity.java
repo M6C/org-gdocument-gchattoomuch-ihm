@@ -2,7 +2,6 @@ package org.gdocument.gchattoomuch.ihm.browser.db.activity;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,13 +12,18 @@ import org.gdocument.gchattoomuch.ihm.R;
 import org.gdocument.gchattoomuch.ihm.browser.db.adapter.BrowserDatabaseAdapter;
 import org.gdocument.gchattoomuch.ihm.browser.db.manager.ContentProviderManager;
 import org.gdocument.gchattoomuch.ihm.browser.db.manager.ContentProviderManager.Column;
+import org.gdocument.gchattoomuch.ihm.browser.db.manager.ContentProviderManager.ColumnDate;
+import org.gdocument.gchattoomuch.ihm.browser.db.manager.ContentProviderManager.ColumnNumber;
 import org.gdocument.gchattoomuch.ihm.browser.db.model.ContentProviderData;
 import org.gdocument.gchattoomuch.ihm.browser.db.model.DatabaseItem;
 import org.gdocument.gchattoomuch.ihm.browser.db.service.DbContentProviderService;
 import org.gdocument.gchattoomuch.lib.log.Logger;
+import org.gdocument.gchattoomuch.p2p.task.ExtractDataTask;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -44,6 +48,8 @@ public class BrowserDatabaseActivity extends Activity {
 	private static final String TAG = BrowserDatabaseActivity.class.getName();
 
 	private static final int CODE_ACTIVITY_RESULT_CHOOSER = 10;
+    private String[][] filterValue = {{"", ""}, {"address", "8356"}, {"address not", "6834696858"}};
+    private int filterIndex = 1;
 
 	private TextView tvNameDatabase;
 	private ListView lvData;
@@ -59,6 +65,8 @@ public class BrowserDatabaseActivity extends Activity {
 	private DatabaseItem currentDatabase;
 	private Column columnOrder = null;
 	private boolean orderDesc = true;
+
+	private Notifier notifier = new Notifier();
 
 	private ProgressDialog progressDialog;
 
@@ -81,11 +89,13 @@ public class BrowserDatabaseActivity extends Activity {
         lvData.setAdapter(adapter);
 
         databaseItemList.add(createDatabaseItemSms(false));
+        databaseItemList.add(createDatabaseItemSmsCache(false));
         databaseItemList.add(createDatabaseItemCall(false));
         databaseItemList.add(createDatabaseItemContact(false));
         databaseItemList.add(createDatabaseItemPhone(false));
 
         databaseItemList.add(createDatabaseItemSms(true));
+        databaseItemList.add(createDatabaseItemSmsCache(true));
         databaseItemList.add(createDatabaseItemCall(true));
         databaseItemList.add(createDatabaseItemContact(true));
         databaseItemList.add(createDatabaseItemPhone(true));
@@ -104,42 +114,84 @@ public class BrowserDatabaseActivity extends Activity {
 					tvNameDatabase.setText(filePath);
 				}
 
-				new AsyncTask<Void, Void, List<String>>() {
+				new AsyncTask<Void, Void, Void>() {
 
-					@Override
+			    	private List<String> databaseName = new ArrayList<String>();
+			    	private List<DatabaseItem> databaseList = new ArrayList<DatabaseItem>();
+
+			    	@Override
 					protected void onPreExecute() {
 						progressDialog.show();
 					}
 
 					@Override
-					protected List<String> doInBackground(Void... params) {
-						return getDatabaseItemListText(filePath);
+					protected Void doInBackground(Void... params) {
+						initializeDatabaseItemListText(filePath);
+						return null;
 					}
-					
-					@Override
-					protected void onPostExecute(List<String> textList) {
-				    	if (textList.size() > 1) {
-							progressDialog.dismiss();
 
-							FactoryDialog.getInstance().buildListView(BrowserDatabaseActivity.this, R.string.title_dialog_open_database, textList.toArray(new String[0]), new OnItemClickListener() {
+					@Override
+					protected void onPostExecute(Void result) {
+						progressDialog.dismiss();
+						if (databaseName.size() > 1) {
+
+							FactoryDialog.getInstance().buildListView(BrowserDatabaseActivity.this, R.string.title_dialog_open_database, databaseName.toArray(new String[0]), new OnItemClickListener() {
 
 								@Override
 								public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 									columnOrder = null;
 									btnOrder.setText(R.string.btn_text_order);
-									currentDatabase = databaseItemList.get(position);
+									currentDatabase = databaseList.get(position);
 
 									extractAndOpenDatabase(filePath, currentDatabase);
 								}
 							}).show();
-				    	} else if (textList.size() > 0) {
+				    	} else if (databaseName.size() > 0) {
 							columnOrder = null;
 							btnOrder.setText(R.string.btn_text_order);
-							currentDatabase = databaseItemList.get(0);
+							currentDatabase = databaseList.get(0);
 
 							extractAndOpenDatabase(filePath, currentDatabase);
 				    	}
 					}
+
+				    private void initializeDatabaseItemListText(String filePath) {
+				    	databaseName.clear();
+				    	databaseList.clear();
+						List<String> contentFileName = new ArrayList<String>();
+						if (filePath.endsWith(".zip")) {
+							try {
+								contentFileName = FileTool.getInstance().listZipEntry(filePath);
+							} catch (IOException e) {
+								logMe(e);
+							}
+						} else if (filePath.endsWith(".db")) {
+							contentFileName.add(filePath);
+						}
+
+						if (contentFileName.size() > 0) {
+					    	for(int i=0 ; i<databaseItemList.size() ; i++) {
+						    	DatabaseItem databaseItem = databaseItemList.get(i);
+								String name = getFilename(databaseItem.getFilePath()).toLowerCase(Locale.getDefault());
+					    		for (String content : contentFileName) {
+					    			if (content.toLowerCase(Locale.getDefault()).endsWith(name)) {
+					    				databaseName.add(databaseItem.getName());
+					    				databaseList.add(databaseItem);
+					    				break;
+					    			}
+					    		}
+					    	}
+						}
+			    		if (databaseList.size() == 0) {
+			    			databaseItemList.clear();
+			    			for(String content : contentFileName) {
+			    				DatabaseItem item = createDatabaseItemUnknow(content);
+								databaseItemList.add(item);
+								databaseName.add(item.getName());
+								databaseList.add(item);
+			    			}
+			    		}
+				    }
 				}.execute();
     		}
     	}
@@ -219,34 +271,38 @@ public class BrowserDatabaseActivity extends Activity {
 		startActivityForResult(Intent.createChooser(intent, getString(R.string.btn_open_database)), CODE_ACTIVITY_RESULT_CHOOSER);
     }
 
-    private List<String> getDatabaseItemListText(String filePath) {
-    	List<String> ret = new ArrayList<String>();
-		List<String> contentFileName = new ArrayList<String>();
-		if (filePath.endsWith(".zip")) {
-			try {
-				contentFileName = FileTool.getInstance().listZipEntry(filePath);
-			} catch (IOException e) {
-				logMe(e);
-			}
-		} else if (filePath.endsWith(".db")) {
-			contentFileName.add(filePath);
+    public void onClickExtract(View view) {
+		if (etFilterColumn.getText().toString().isEmpty() || etFilterValue.getText().toString().isEmpty()) {
+			Toast.makeText(this, getString(R.string.message_filter_obligatoire), Toast.LENGTH_LONG).show();
+		} else {
+			OnClickListener onClickOkListener = new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					executeExtractDataTask(true);
+				}
+			};
+			OnClickListener onClickCancelListener = new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					executeExtractDataTask(false);
+				}
+			};
+			FactoryDialog.getInstance().buildOkCancelDialog(this, onClickOkListener, onClickCancelListener, R.string.dialog_extract_merge_title, R.string.dialog_extract_merge_message).show();
 		}
+	}
 
-		if (contentFileName.size() > 0) {
-	    	for(int i=0 ; i<databaseItemList.size() ; i++) {
-		    	DatabaseItem databaseItem = databaseItemList.get(i);
-				String name = getFilename(databaseItem.getFilePath()).toLowerCase(Locale.getDefault());
-	    		for (String content : contentFileName) {
-	    			if (content.toLowerCase(Locale.getDefault()).endsWith(name)) {
-	    				ret.add(databaseItem.getName());
-	    				break;
-	    			}
-	    		}
-	    	}
+    public void onClickSetFilter(View view) {
+		if (this.filterIndex >= this.filterValue.length) {
+			this.filterIndex = 0;
 		}
-		return ret;
+		String[] filter = filterValue[filterIndex++];
+		etFilterColumn.setText(filter[0]);
+		etFilterValue.setText(filter[1]);
     }
 
+    private void executeExtractDataTask(boolean merge) {
+		new ExtractDataTask(BrowserDatabaseActivity.this, BrowserDatabaseActivity.this.notifier, createDatabaseItemSmsCache(true), etFilterColumn.getText().toString(), etFilterValue.getText().toString(), merge).execute();
+    }
 	private void extractAndOpenDatabase(final String filePath, final DatabaseItem currentDatabase) {
 		new AsyncTask<Void, Void, Void>() {
 
@@ -340,7 +396,7 @@ public class BrowserDatabaseActivity extends Activity {
     	return ret;
     }
 
-	private String getFilename(String filePath) {
+	public String getFilename(String filePath) {
 		String databaseName;
 		if (filePath.indexOf('\\') >= 0) {
 			databaseName  = filePath.substring(filePath.lastIndexOf('\\') + 1);
@@ -350,6 +406,16 @@ public class BrowserDatabaseActivity extends Activity {
 			databaseName = filePath;
 		}
 		return databaseName;
+	}
+
+	private DatabaseItem createDatabaseItemUnknow(String filePath) {
+		String databaseName = getFilename(filePath);
+		filePath = Environment.getExternalStorageDirectory() + "/" + getPackageName() + "/" + databaseName;
+
+		String title = databaseName + " All";
+		DatabaseItem item = new DatabaseItem(title, filePath, databaseName, null);
+		item.setKnow(false);
+		return item;
 	}
 
 	private DatabaseItem createDatabaseItemSms(boolean all) {
@@ -367,6 +433,27 @@ public class BrowserDatabaseActivity extends Activity {
 		}
 
 		String title = "Sms";
+		if (all) {
+			title += " All";
+		}
+		return new DatabaseItem(title, filePath, databaseName, columnList);
+	}
+
+	private DatabaseItem createDatabaseItemSmsCache(boolean all) {
+		String filePath = Environment.getExternalStorageDirectory() + "/" + getPackageName() + "/SmsCache.db";
+		String databaseName = getFilename(filePath);
+
+		List<Column> columnList = null;
+		if (!all) {
+			columnList = new ArrayList<ContentProviderManager.Column>();
+			columnList.add(new ColumnNumber("_id"));
+			columnList.add(new ContentProviderManager.Column("address"));
+			columnList.add(new ColumnDate("date"));
+			columnList.add(new ContentProviderManager.Column("type"));
+			columnList.add(new ContentProviderManager.Column("body"));
+		}
+
+		String title = "SmsCache";
 		if (all) {
 			title += " All";
 		}
@@ -450,25 +537,6 @@ public class BrowserDatabaseActivity extends Activity {
 	private static void logMe(Exception ex) {
 		Logger.logMe(TAG, ex);
     }
-
-	private class ColumnDate extends ContentProviderManager.Column {
-
-		public ColumnDate(String name) {
-			super(name, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()), TYPE.DATE);
-		}
-
-		@Override
-		public String toString(String data) {
-			return data == null ? "" : getFormat().format(Long.parseLong(data));
-		}
-	}
-
-	private class ColumnNumber extends ContentProviderManager.Column {
-
-		public ColumnNumber(String name) {
-			super(name, null, TYPE.NUMBER);
-		}
-	}
 
 	private class Notifier implements INotifierMessage {
 

@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.gdocument.gchattoomuch.lib.log.Logger;
 import org.gdocument.gchattoomuch.p2p.common.P2PConstant;
@@ -28,6 +30,7 @@ public class WifiDatabaseDownloadTask extends AsyncTask<Void, Void, String> {
 	private ServerSocket serverSocket = null;
 	private int timeOut = P2PConstant.P2P_DOWNLOAD_TIMEOUT;
 	private boolean flagRunning = false;
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 
 	public WifiDatabaseDownloadTask(Context context, INotifierMessage notifier) {
 		this.context = context;
@@ -46,7 +49,7 @@ public class WifiDatabaseDownloadTask extends AsyncTask<Void, Void, String> {
 		try {
 			// Create a server socket
 			final File f = new File(Environment.getExternalStorageDirectory() + "/" + context.getPackageName()
-					+ "/database-" + System.currentTimeMillis() + ".zip");
+					+ "/database-" + sdf.format(new Date()) + ".zip");
 			final int port = P2PConstant.getPort();
 			serverSocket = new ServerSocket(port);
 			serverSocket.setSoTimeout(timeOut);

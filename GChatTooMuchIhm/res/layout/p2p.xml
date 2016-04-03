@@ -30,7 +30,7 @@
 	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
 	            android:hint="Phone"
-	            android:text="0683469658"
+	            android:text="0"
 	            android:inputType="number"
 	        />
 	        <EditText
@@ -60,6 +60,7 @@
 	        android:paddingRight="2dip"
 	        android:orientation="horizontal">
 		    <Button
+		        android:id="@+id/btn_start_stop_server"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:text="@string/btn_text_start_server"

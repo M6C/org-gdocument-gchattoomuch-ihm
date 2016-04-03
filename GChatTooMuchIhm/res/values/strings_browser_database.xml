@@ -4,5 +4,10 @@
     <string name="title_dialog_order">Order</string>
     <string name="title_dialog_open_database">Open Database</string>
     <string name="btn_open_database">Open</string>
+    <string name="btn_extract">Extract</string>
+    <string name="btn_set_filter">Filter</string>
     <string name="tv_name_database">Database Name</string>
+    <string name="message_filter_obligatoire">Les champs Filter sont obligatoire</string>
+    <string name="dialog_extract_merge_title">Extract Database</string>
+    <string name="dialog_extract_merge_message">Merge Extract in same DB ?</string>
 </resources>

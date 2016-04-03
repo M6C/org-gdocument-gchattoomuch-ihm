@@ -12,6 +12,7 @@ public class DatabaseItem {
 	private String filePath = null;
 	private String databaseName = null;
 	private List<ContentProviderManager.Column> columnList = new ArrayList<ContentProviderManager.Column>();
+	private boolean know = true;
 
 	public DatabaseItem(String name, String filePath, String databaseName, List<Column> columnList) {
 		super();
@@ -44,5 +45,11 @@ public class DatabaseItem {
 	}
 	public void setColumnList(List<ContentProviderManager.Column> columnList) {
 		this.columnList = columnList;
+	}
+	public boolean isKnow() {
+		return know;
+	}
+	public void setKnow(boolean know) {
+		this.know = know;
 	}
 }

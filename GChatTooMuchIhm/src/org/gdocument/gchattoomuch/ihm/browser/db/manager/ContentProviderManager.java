@@ -2,8 +2,10 @@ package org.gdocument.gchattoomuch.ihm.browser.db.manager;
 
 import java.io.File;
 import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.gdocument.gchattoomuch.lib.log.Logger;
 
@@ -114,6 +116,29 @@ public class ContentProviderManager {
 	private static void logMe(Exception ex) {
 		Logger.logMe(TAG, ex);
     }
+
+	public static class ColumnDate extends Column {
+
+		public ColumnDate(String name) {
+			super(name, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()), TYPE.DATE);
+		}
+
+		@Override
+		public String toString(String data) {
+			try {
+				return data == null ? "" : getFormat().format(Long.parseLong(data));
+			} catch (RuntimeException e) {
+				return data;
+			}
+		}
+	}
+
+	public static class ColumnNumber extends Column {
+
+		public ColumnNumber(String name) {
+			super(name, null, TYPE.NUMBER);
+		}
+	}
 
 	public static class Column {
 		public enum TYPE {
