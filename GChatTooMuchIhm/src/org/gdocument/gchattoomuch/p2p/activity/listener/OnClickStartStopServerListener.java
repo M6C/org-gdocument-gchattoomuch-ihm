@@ -1,9 +1,8 @@
 package org.gdocument.gchattoomuch.p2p.activity.listener;
 
 import org.gdocument.gchattoomuch.ihm.R;
-import org.gdocument.gchattoomuch.p2p.common.P2PConstant;
 import org.gdocument.gchattoomuch.p2p.task.WifiDatabaseDownloadTask;
-import org.gdocument.gchattoomuch.p2p.task.WifiDatabaseDownloadTask.IProcessNotification;
+import org.gdocument.gchattoomuch.p2p.task.interfaces.IProcessNotification;
 
 import android.content.Context;
 import android.content.DialogInterface;

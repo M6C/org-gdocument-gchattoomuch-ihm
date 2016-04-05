@@ -79,6 +79,20 @@
 		        android:onClick="onClickOpenDatabase"
 		    />
 		    <Button
+		        android:id="@+id/btn_start_connection_download"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:text="@string/btn_text_server_download_db"
+		        android:onClick="onClickConnectionDownload"
+		    />
+		    <Button
+		        android:id="@+id/btn_start_connection_upload"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:text="@string/btn_text_start_upload_server"
+		        android:onClick="onClickConnectionUpload"
+		    />
+		    <Button
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:text="@string/btn_text_main_activity"

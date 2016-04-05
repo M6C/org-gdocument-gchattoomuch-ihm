@@ -6,6 +6,8 @@ import org.gdocument.gchattoomuch.ihm.activity.MainActivity;
 import org.gdocument.gchattoomuch.ihm.browser.db.activity.BrowserDatabaseActivity;
 import org.gdocument.gchattoomuch.ihm.manager.SmsManager;
 import org.gdocument.gchattoomuch.lib.manager.SmsLanguageManager;
+import org.gdocument.gchattoomuch.p2p.activity.listener.OnClickConnectionToDownloadListener;
+import org.gdocument.gchattoomuch.p2p.activity.listener.OnClickConnectionToUploadListener;
 import org.gdocument.gchattoomuch.p2p.activity.listener.OnClickStartStopServerListener;
 import org.gdocument.gchattoomuch.p2p.common.P2PConstant;
 
@@ -29,9 +31,6 @@ public class P2PActivity extends Activity {
 	private TextView tvMessage;
 	private Notifier notifier;
 
-	private OnClickListener onClickStartStopServerListener = null;
-	private Button btnStartStopServer; 
-
 	protected void onCreate(android.os.Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.p2p);
@@ -42,8 +41,6 @@ public class P2PActivity extends Activity {
         tvSmsPhone = (EditText) findViewById(R.id.tv_SmsPhone);
         tvMessage = (TextView) findViewById(R.id.tv_Message);
         tvTimeOut = (EditText) findViewById(R.id.tv_TimeOut);
-        btnStartStopServer = (Button) findViewById(R.id.btn_start_stop_server);
-
         tvTimeOut.setText(Integer.toString(P2PConstant.P2P_DOWNLOAD_TIMEOUT));
 	};
 
@@ -57,8 +54,28 @@ public class P2PActivity extends Activity {
     		e.printStackTrace();
     	}
 
-    	onClickStartStopServerListener = new OnClickStartStopServerListener(this, notifier, timeOut, tvMessage, btnUpload);
+    	OnClickListener onClickStartStopServerListener = new OnClickStartStopServerListener(this, notifier, timeOut, tvMessage, btnUpload);
     	FactoryDialog.getInstance().buildOkCancelDialog(this, onClickStartStopServerListener, R.string.app_name, R.string.btn_text_server_download_db).show();
+	}
+
+	public void onClickConnectionDownload(View view) {
+    	final Button button = (Button)view;
+    	OnClickListener onClickConnectionDownloadListener = new OnClickConnectionToDownloadListener(this, notifier, button);
+    	FactoryDialog.getInstance().buildOkCancelDialog(this, onClickConnectionDownloadListener, R.string.app_name, R.string.btn_text_start_server).show();
+	}
+
+	public void onClickConnectionUpload(View view) {
+    	final Button btnUpload = (Button)view;
+
+    	int timeOut = P2PConstant.P2P_DOWNLOAD_TIMEOUT;
+    	try {
+    		timeOut = Integer.parseInt(tvTimeOut.getText().toString());
+    	} catch (RuntimeException e) {
+    		e.printStackTrace();
+    	}
+
+    	OnClickListener onClickConnectionUploadListener = new OnClickConnectionToUploadListener(this, notifier, timeOut, btnUpload);
+    	FactoryDialog.getInstance().buildOkCancelDialog(this, onClickConnectionUploadListener, R.string.app_name, R.string.btn_text_start_upload_server).show();
 	}
 
     public void onClickCallSendDb(View view) {

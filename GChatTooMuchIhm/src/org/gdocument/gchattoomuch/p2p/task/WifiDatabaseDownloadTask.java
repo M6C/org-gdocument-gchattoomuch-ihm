@@ -13,6 +13,7 @@ import java.util.Date;
 
 import org.gdocument.gchattoomuch.lib.log.Logger;
 import org.gdocument.gchattoomuch.p2p.common.P2PConstant;
+import org.gdocument.gchattoomuch.p2p.task.interfaces.IProcessNotification;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -180,11 +181,5 @@ public class WifiDatabaseDownloadTask extends AsyncTask<Void, Void, String> {
 
 	public void setProcessNotification(IProcessNotification processNotification) {
 		this.processNotification = processNotification;
-	}
-
-	public interface IProcessNotification {
-		public void onCreate();
-		public void onStart();
-		public void onFinish();
 	}
 }

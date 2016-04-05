@@ -3,6 +3,8 @@ package org.gdocument.gchattoomuch.p2p.task;
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.gdocument.gchattoomuch.lib.log.Logger;
 import org.gdocument.gchattoomuch.p2p.common.P2PConstant;
@@ -10,30 +12,29 @@ import org.gdocument.gchattoomuch.p2p.common.P2PConstant;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.view.View;
-import android.widget.TextView;
 
 import com.cameleon.common.android.inotifier.INotifierMessage;
 import com.cameleon.common.tool.NetworkUtil;
 
 public class WifiConnectionToDownloadTask extends AsyncTask<Void, Void, Void> {
 
-	private String TAG = WifiConnectionToDownloadTask.class.getName();
+	private static final String TAG = WifiConnectionToDownloadTask.class.getName();
+	private static final String FILENAME_DATABASE_END_ZIP = ".zip";
+	private static final String FILENAME_DATABASE_START = "database-";
 
 	private Context context;
 	private INotifierMessage notifier;
-	private TextView statusText;
 	private ServerSocket serverSocket = null;
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 
 
-	public WifiConnectionToDownloadTask(Context context, View statusText) {
-		this(context, null, statusText);
+	public WifiConnectionToDownloadTask(Context context) {
+		this(context, null);
 	}
 
-	public WifiConnectionToDownloadTask(Context context, INotifierMessage notifier, View statusText) {
+	public WifiConnectionToDownloadTask(Context context, INotifierMessage notifier) {
 		this.context = context;
 		this.notifier = notifier;
-		this.statusText = (TextView) statusText;
 	}
 
 	@Override
@@ -48,7 +49,7 @@ public class WifiConnectionToDownloadTask extends AsyncTask<Void, Void, Void> {
 			int port = P2PConstant.getPortClient();
 			int timeout = P2PConstant.P2P_DOWNLOAD_TIMEOUT;
 			File file = new File(Environment.getExternalStorageDirectory() + "/" + context.getPackageName()
-					+ "/database-" + System.currentTimeMillis() + ".zip");
+					+ "/" + FILENAME_DATABASE_START + sdf.format(new Date()) + FILENAME_DATABASE_END_ZIP);
 			logMe("create file:" + file.getPath());
 			File dirs = new File(file.getParent());
 			if (!dirs.exists()) {
@@ -70,8 +71,8 @@ public class WifiConnectionToDownloadTask extends AsyncTask<Void, Void, Void> {
 	/** * Start activity that can handle the JPEG image */
 	@Override
 	protected void onPostExecute(Void result) {
-		if (result != null && statusText != null) {
-			statusText.setText("File copied - " + result);
+		if (result != null) {
+			logMe("File copied - " + result);
 		}
 		closeSocket();
 	}

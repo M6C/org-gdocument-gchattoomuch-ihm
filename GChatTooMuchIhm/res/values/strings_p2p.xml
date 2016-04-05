@@ -11,6 +11,9 @@
 
     <string name="btn_text_start_server">Start Server</string>
     <string name="btn_text_stop_server">Stop Server</string>
+
+    <string name="btn_text_start_upload_server">Start Upload</string>
+    <string name="btn_text_stop_upload_server">Stop Upload</string>
     
     <string name="btn_text_client_upload">Client Download</string>
 
