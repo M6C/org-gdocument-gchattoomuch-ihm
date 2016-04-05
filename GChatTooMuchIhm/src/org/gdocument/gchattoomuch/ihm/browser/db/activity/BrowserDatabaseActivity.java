@@ -48,7 +48,7 @@ public class BrowserDatabaseActivity extends Activity {
 	private static final String TAG = BrowserDatabaseActivity.class.getName();
 
 	private static final int CODE_ACTIVITY_RESULT_CHOOSER = 10;
-    private String[][] filterValue = {{"", ""}, {"address", "8356"}, {"address not", "6834696858"}};
+    private String[][] filterValue = {{"", ""}, {"address", "8356"}, {"address not", "683469658"}};
     private int filterIndex = 1;
 
 	private TextView tvNameDatabase;
