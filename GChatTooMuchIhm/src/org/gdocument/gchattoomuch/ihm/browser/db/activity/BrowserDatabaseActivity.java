@@ -19,6 +19,8 @@ import org.gdocument.gchattoomuch.ihm.browser.db.model.DatabaseItem;
 import org.gdocument.gchattoomuch.ihm.browser.db.service.DbContentProviderService;
 import org.gdocument.gchattoomuch.lib.log.Logger;
 import org.gdocument.gchattoomuch.p2p.task.ExtractDataTask;
+import org.gdocument.gchattoomuch.p2p.task.ExtractDataTask.ExtractEvent;
+import org.gdocument.gchattoomuch.p2p.task.ExtractDataTask.INotifierExtract;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -40,7 +42,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cameleon.common.android.factory.FactoryDialog;
-import com.cameleon.common.android.inotifier.INotifierMessage;
 import com.cameleon.common.tool.FileTool;
 
 public class BrowserDatabaseActivity extends Activity {
@@ -538,16 +539,45 @@ public class BrowserDatabaseActivity extends Activity {
 		Logger.logMe(TAG, ex);
     }
 
-	private class Notifier implements INotifierMessage {
+	private class Notifier implements INotifierExtract {
 
 		@Override
-		public void notifyError(Exception ex) {
-			logMe(ex);
+		public synchronized void notifyError(final Exception ex) {
+			runOnUiThread(new Runnable() {
+				public void run() {
+					logMe(ex);
+					progressDialog.setMessage(ex.getMessage());
+				}
+			});
 		}
 
 		@Override
-		public void notifyMessage(final String msg) {
-			logMe(msg);
+		public synchronized void notifyMessage(final String msg) {
+			runOnUiThread(new Runnable() {
+				public void run() {
+					logMe(msg);
+					progressDialog.setMessage(msg);
+				}
+			});
+		}
+
+		@Override
+		public void onEvent(ExtractEvent event) {
+			switch (event) {
+			case EVENT_START:
+				if (!progressDialog.isShowing()) {
+					progressDialog.show();
+				}
+				break;
+
+			case EVENT_END:
+				if (progressDialog.isShowing()) {
+					progressDialog.hide();;
+				}
+				break;
+			default:
+				break;
+			}
 		}
 	}
 }
