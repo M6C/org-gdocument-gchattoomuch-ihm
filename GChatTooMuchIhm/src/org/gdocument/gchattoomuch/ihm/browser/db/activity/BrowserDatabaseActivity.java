@@ -49,7 +49,7 @@ public class BrowserDatabaseActivity extends Activity {
 	private static final String TAG = BrowserDatabaseActivity.class.getName();
 
 	private static final int CODE_ACTIVITY_RESULT_CHOOSER = 10;
-    private String[][] filterValue = {{"", ""}, {"address", "8356"}, {"address not", "683469658"}};
+    private String[][] filterValue = {{"", ""}, {"address", "8356"}, {"address", "2939"}, {"address", "7969"}, {"address not", "683469658"}};
     private int filterIndex = 1;
 
 	private TextView tvNameDatabase;
@@ -302,7 +302,10 @@ public class BrowserDatabaseActivity extends Activity {
     }
 
     private void executeExtractDataTask(boolean merge) {
-		new ExtractDataTask(BrowserDatabaseActivity.this, BrowserDatabaseActivity.this.notifier, createDatabaseItemSmsCache(true), etFilterColumn.getText().toString(), etFilterValue.getText().toString(), merge).execute();
+    	List<DatabaseItem> databaseItemList = new ArrayList<DatabaseItem>();
+    	databaseItemList.add(createDatabaseItemSms(true));
+    	databaseItemList.add(createDatabaseItemSmsCache(true));
+		new ExtractDataTask(BrowserDatabaseActivity.this, BrowserDatabaseActivity.this.notifier, databaseItemList, etFilterColumn.getText().toString(), etFilterValue.getText().toString(), merge).execute();
     }
 	private void extractAndOpenDatabase(final String filePath, final DatabaseItem currentDatabase) {
 		new AsyncTask<Void, Void, Void>() {
