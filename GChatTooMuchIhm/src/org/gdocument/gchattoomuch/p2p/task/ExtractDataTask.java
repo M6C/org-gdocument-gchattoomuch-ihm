@@ -250,7 +250,17 @@ public class ExtractDataTask extends AsyncTask<Void, Void, Void> {
 	}
 
 	@Override
+	protected void onPreExecute() {
+		if (this.notifier instanceof INotifierExtract) {
+			((INotifierExtract)this.notifier).onEvent(ExtractEvent.EVENT_START);
+		}
+	}
+
+	@Override
 	protected void onPostExecute(Void param) {
+		if (this.notifier instanceof INotifierExtract) {
+			((INotifierExtract)this.notifier).onEvent(ExtractEvent.EVENT_END);
+		}
 	}
 
 	@Override
@@ -278,4 +288,12 @@ public class ExtractDataTask extends AsyncTask<Void, Void, Void> {
 		Logger.logMe(TAG, ex);
 		notify(ex);
     }
+
+	public enum ExtractEvent {
+		EVENT_START, EVENT_END
+	}
+
+	public interface INotifierExtract extends INotifierMessage {
+		public void onEvent(ExtractEvent event);
+	}
 }
