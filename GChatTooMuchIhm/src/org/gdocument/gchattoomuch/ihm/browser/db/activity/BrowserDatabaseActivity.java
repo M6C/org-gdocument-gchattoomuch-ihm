@@ -307,6 +307,7 @@ public class BrowserDatabaseActivity extends Activity {
     	databaseItemList.add(createDatabaseItemSmsCache(true));
 		new ExtractDataTask(BrowserDatabaseActivity.this, BrowserDatabaseActivity.this.notifier, databaseItemList, etFilterColumn.getText().toString(), etFilterValue.getText().toString(), merge).execute();
     }
+
 	private void extractAndOpenDatabase(final String filePath, final DatabaseItem currentDatabase) {
 		new AsyncTask<Void, Void, Void>() {
 

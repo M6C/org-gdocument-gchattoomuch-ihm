@@ -46,12 +46,12 @@ public class ExtractDataTask extends AsyncTask<Void, Void, Void> {
 
 	private DatabaseItem currentDatabase;
 
-	public ExtractDataTask(BrowserDatabaseActivity context, INotifierMessage notifier, DatabaseItem databaseItem, String filterColumn, String filterValue, boolean mergeDB) {
+	public ExtractDataTask(BrowserDatabaseActivity context, INotifierMessage notifier, List<DatabaseItem> databaseItemList, String filterColumn, String filterValue, boolean mergeDB) {
 		this.context = context;
 		this.notifier = notifier;
 		this.filterColumn = filterColumn;
 		this.filterValue = filterValue;
-        this.databaseItemList.add(databaseItem);
+        this.databaseItemList = databaseItemList;
         this.databaseLocation = "/data/data/" + this.context.getPackageName() + "/databases";
         this.destinationDirectory = Environment.getExternalStorageDirectory() + "/" + this.context.getPackageName();
 		this.unzipDirectory = destinationDirectory + "/unzip";
