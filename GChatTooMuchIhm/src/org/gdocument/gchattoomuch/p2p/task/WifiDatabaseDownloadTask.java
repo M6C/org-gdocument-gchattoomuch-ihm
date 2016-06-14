@@ -31,7 +31,6 @@ public class WifiDatabaseDownloadTask extends AsyncTask<Void, Void, String> {
 	private ServerSocket serverSocket = null;
 	private int timeOut = P2PConstant.P2P_DOWNLOAD_TIMEOUT;
 	private boolean flagRunning = false;
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 
 	public WifiDatabaseDownloadTask(Context context, INotifierMessage notifier) {
 		this.context = context;
@@ -48,6 +47,7 @@ public class WifiDatabaseDownloadTask extends AsyncTask<Void, Void, String> {
 	protected String doInBackground(Void... params) {
 		logMe("doInBackground");
 		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 			// Create a server socket
 			final File f = new File(Environment.getExternalStorageDirectory() + "/" + context.getPackageName()
 					+ "/database-" + sdf.format(new Date()) + ".zip");

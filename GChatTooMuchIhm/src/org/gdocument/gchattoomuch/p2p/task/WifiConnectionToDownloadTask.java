@@ -25,7 +25,6 @@ public class WifiConnectionToDownloadTask extends AsyncTask<Void, Void, Void> {
 	private Context context;
 	private INotifierMessage notifier;
 	private ServerSocket serverSocket = null;
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 
 
 	public WifiConnectionToDownloadTask(Context context) {
@@ -41,6 +40,7 @@ public class WifiConnectionToDownloadTask extends AsyncTask<Void, Void, Void> {
 	protected Void doInBackground(Void... params) {
 		logMe("doInBackground");
 		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 			/**
 			 * * Create a server socket and wait for client connections. This *
 			 * call blocks until a connection is accepted from a client
