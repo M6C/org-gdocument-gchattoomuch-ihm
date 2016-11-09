@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.gdocument.gchattoomuch.ihm.browser.db.activity.BrowserDatabaseActivity;
 import org.gdocument.gchattoomuch.ihm.browser.db.manager.ContentProviderManager;
@@ -43,6 +45,7 @@ public class ExtractDataTask extends AsyncTask<Void, Void, Void> {
 	private boolean mergeDB = false;
 	private DbContentProviderService dbContentProviderService;
 	private List<String> listDatabaseName = new ArrayList<String>();
+	private Map<DatabaseItem, DbContentProviderService> mapDatabaseProviderService = new HashMap<DatabaseItem, DbContentProviderService>();
 
 	private DatabaseItem currentDatabase;
 
@@ -104,6 +107,7 @@ public class ExtractDataTask extends AsyncTask<Void, Void, Void> {
 					&& filename.endsWith(FILENAME_DATABASE_END_ZIP)) {
 					filename = renameZipFilename(filename);
 					for (DatabaseItem currentDatabase : databaseItemList) {
+//						this.dbContentProviderService = null;
 						unzipDatabase(file.getAbsolutePath(), currentDatabase);
 						extractData(currentDatabase);
 
@@ -137,6 +141,12 @@ public class ExtractDataTask extends AsyncTask<Void, Void, Void> {
 		}
 	}
 
+	private void initializeDatabaseProviderService() {
+		if (this.mergeDB) {
+//			dbProviderService = 
+//			mapDatabaseProviderService.put(databaseItem, dbProviderService);
+		}
+	}
 	private void createDatabase(DatabaseItem databaseItem, String filename) {
 //		String date = filename.substring("database-".length(), filename.lastIndexOf(".zip"));
 //		String databaseName = databaseItem.getDatabaseName().substring(0, databaseItem.getDatabaseName().lastIndexOf(".db")) + "-" + date + ".db";
